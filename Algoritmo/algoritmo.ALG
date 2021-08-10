@@ -10,7 +10,7 @@ Var
    //QUANDO MUDAR AQUI, MUDAR TODAS AS FUNCOES E PROCEDIMENTOS
    //PARA NAO DAR ERRO NOS LAÇOS QUE CONSULTAM OS PRODUTOS E O CARRINHO
    quantidadeProdutos : inteiro
-   produtos: vetor [1..20, 1..3] de caractere
+   produtos: vetor [1..20, 1..4] de caractere
    nome, sobrenome, cpf, email, dataNascimento, senhaConta : caractere
 Inicio
    quantidadeProdutos <- 20
@@ -24,35 +24,45 @@ Inicio
    senhaConta <- "pedro123"
 
    produtos[1,1] <- "Arroz"
-   produtos[1,2] <- "10"
+   produtos[1,2] <- "0"
    produtos[1,3] <- "3.45"
+   produtos[1,4] <- "20"
    produtos[2,1] <- "Feijão"
-   produtos[2,2] <- "10"
+   produtos[2,2] <- "1"
    produtos[2,3] <- "6.09"
+   produtos[2,4] <- "30"
    produtos[3,1] <- "Óleo"
    produtos[3,2] <- "8"
    produtos[3,3] <- "4.99"
+   produtos[3,4] <- "20"
    produtos[4,1] <- "Biscoito"
    produtos[4,2] <- "20"
    produtos[4,3] <- "1.50"
+   produtos[4,4] <- "30"
    produtos[5,1] <- "Detergente"
-   produtos[5,2] <- "15"
+   produtos[5,2] <- "4"
    produtos[5,3] <- "8.50"
+   produtos[5,4] <- "15"
    produtos[6,1] <- "Sabao em po"
    produtos[6,2] <- "7"
    produtos[6,3] <- "7.50"
+   produtos[6,4] <- "15"
    produtos[7,1] <- "Pasta de dente"
    produtos[7,2] <- "25"
    produtos[7,3] <- "10.99"
+   produtos[7,4] <- "30"
    produtos[8,1] <- "Macarrao"
    produtos[8,2] <- "15"
    produtos[8,3] <- "3.20"
+   produtos[8,4] <- "20"
    produtos[9,1] <- "Coca-Cola 2L"
-   produtos[9,2] <- "5"
+   produtos[9,2] <- "16"
    produtos[9,3] <- "9.00"
+   produtos[9,4] <- "20"
    produtos[10,1] <- "Fanta"
-   produtos[10,2] <- "10"
+   produtos[10,2] <- "12"
    produtos[10,3] <- "7.50"
+   produtos[10,4] <- "15"
 
 
    //Procedimento Exibir Menu Principal
@@ -254,16 +264,16 @@ inicio
    leia(opcao)
    escolha opcao
    caso "1"
-         //ver saldo
-         escreval("Saldo: ", saldo)
+      //ver saldo
+      escreval("Saldo: ", saldo)
    caso "2"
-        //adicionar saldo, simulação add saldo na loja
+      //adicionar saldo, simulação add saldo na loja
    caso "3"
-        //ver cartoes
+      //ver cartoes
    caso "4"
-        //adicionar cartao
+      //adicionar cartao
    caso "5"
-        //remover cartao
+      //remover cartao
    caso "0"
       //volta
    outrocaso
@@ -421,17 +431,113 @@ inicio
    fimse
 fimprocedimento
 
+procedimento verificarSituacao
+var
+   contador : inteiro
+   quantidadeProdutoAtual : inteiro
+   percentual : real
+inicio
+   para contador de 1 ate quantidadeProdutos faca
+      se (produtos[contador, 1] <> "") entao
+         percentual <- (caracpnum(produtos[contador, 2])/caracpnum(produtos[contador, 4]))*100
+         se (percentual = 0) entao
+            escreval("[URGENTE] O produto ", maiusc(produtos[contador, 1]), " está em FALTA. (", percentual:1:0,"%)")
+         senao
+            se (percentual > 0) e (percentual <= 15) entao
+               escreval("[URGENTE] O produto ", maiusc(produtos[contador, 1]), " está entrando EM URGÊNCIA. (", percentual:1:0,"%)")
+            senao
+               se (percentual > 15) e (percentual <= 35) entao
+                  escreval("[ATENÇÃO] O produto ", maiusc(produtos[contador, 1]), " precisa REABASTECER. (", percentual:1:0,"%)")
+               senao
+                  se (percentual > 35) e (percentual <= 50) entao
+                     escreval("[ATENÇÃO] O produto ", maiusc(produtos[contador, 1]), " pode REABASTECER. (", percentual:1:0,"%)")
+                  fimse
+               fimse
+            fimse
+         fimse
+      fimse
+   fimpara
+fimprocedimento
+
+procedimento reporProdutos
+var
+   opcao : caractere
+   contador : inteiro
+   diferenca : inteiro
+   precoTotal1 : real
+   precoTotal2 : real
+inicio
+   escreval()
+   escreval("-----------------------------")
+   escreval("MENU DE COMPRAS DO ESTOQUE")
+   escreval("-----------------------------")
+   escreval("1- Verificar Estoques em ATENÇÃO")
+   escreval("2- Solicitar Orçamento de produtos em ATENÇÃO")
+   escreval("3- Realizar Reestoque de produtos em ATENÇÃO")
+   escreval("0- Voltar")
+   escreval()
+   escreva("Opção: ")
+   leia(opcao)
+   escolha opcao
+   caso "1"
+      verificarSituacao
+      reporProdutos
+   caso "2"
+      escreval("Um email foi enviado para os fornecedores solicitando valores atuais dos produtos.")
+      escreval("Aguarde o retorno de cada fornecedor em breve.")
+      reporProdutos
+   caso "3"
+      escreval("NOME | QUANTIDADE ATUAL | QUANTIDADE ADICIONAL | PREÇO UNITÁRIO | PREÇO TOTAL")
+      escreval()
+      para contador de 1 ate quantidadeProdutos faca
+         se (produtos[contador, 1] <> "") entao
+            diferenca <- caracpnum(produtos[contador, 4]) - caracpnum(produtos[contador, 2])
+            precoTotal1 <- (caracpnum(produtos[contador, 3]) * diferenca)
+            percentual <- (caracpnum(produtos[contador, 2])/caracpnum(produtos[contador, 4]))*100
+            se (percentual = 0) entao
+               escreval(produtos[contador, 1], " | ", produtos[contador, 2], " | ", diferenca, " | ", produtos[contador, 3], " | ", precoTotal1)
+            senao
+               se (percentual > 0) e (percentual <= 15) entao
+                  escreval(produtos[contador, 1], " | ", produtos[contador, 2], " | ", diferenca, " | ", produtos[contador, 3], " | ", precoTotal1)
+               senao
+                  se (percentual > 15) e (percentual <= 35) entao
+                     escreval(produtos[contador, 1], " | ", produtos[contador, 2], " | ", diferenca, " | ", produtos[contador, 3], " | ", precoTotal1)
+                  senao
+                     se (percentual > 35) e (percentual <= 50) entao
+                        escreval(produtos[contador, 1], " | ", produtos[contador, 2], " | ", diferenca, " | ", produtos[contador, 3], " | ", precoTotal1)
+                     fimse
+                  fimse
+               fimse
+            fimse
+            precoTotal2 <- precoTotal2 + precoTotal1
+         fimse
+      fimpara
+      escreval("Preço Total: ", precoTotal2)
+      escreval()
+   caso "0"
+      //voltar
+      escreval()
+   outrocaso
+      escreval("Opção Inválida! Tente novamente!")
+   fimescolha
+fimprocedimento
+
 procedimento exibirMenuEstoque
 var
    opcao : caractere
 inicio
    enquanto (opcao <> "0") faca
       escreval("-----------------------------")
+      escreval("PRODUTOS EM ATENÇÃO DE ESTOQUE")
+      escreval("-----------------------------")
+      verificarSituacao
+      escreval("-----------------------------")
       escreval("Menu Estoque")
       escreval("1- Adicionar Produto")
       escreval("2- Ver Produto")
       escreval("3- Alterar Produto")
       escreval("4- Remover Produto")
+      escreval("5- Reestoque de Produto")
       escreval("0- Voltar para o Menu Principal")
       escreval("-----------------------------")
       escreval()
@@ -449,6 +555,8 @@ inicio
          alterarProduto
       caso "4"
          removerProduto
+      caso "5"
+         reporProdutos
       caso "0"
          escreval("Opção Voltar foi escolhida")
       outrocaso
