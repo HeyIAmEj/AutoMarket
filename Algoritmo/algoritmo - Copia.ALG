@@ -243,6 +243,9 @@ fimprocedimento
 procedimento menuPagamentos
 var
    opcao : caractere
+   saldo : real
+   numcartao, cvv , vencimento : inteiro
+   n , s :  logico
 inicio
    escreval("1- Ver Saldo")
    escreval("2- Adicionar Saldo")
@@ -258,12 +261,29 @@ inicio
          escreval("Saldo: ", saldo)
    caso "2"
         //adicionar saldo, simulação add saldo na loja
+        escreva("Para adicionar saldo vá até a loja e
+        escreva ("solicite a um funcionário.")
    caso "3"
         //ver cartoes
+        escreva("Você cadastrou com cartão Master com final **** **** **** 5318.")
    caso "4"
         //adicionar cartao
+        escreval(" Para adicionar cartões Visa,Master,Hiper digite o número do cartão:")
+        leia (numcartao)
+        escreval(" Digite o vencimento :(MM/AAAA)")
+        leia (vencimento)
+        escreval(" Digite o CVV que fica atrás do seu cartão:")
+        leia(cvv)
+        escreval("Cartão adicionado com sucesso! Agora você já pode realizar suas compras!")
    caso "5"
         //remover cartao
+        escreval(" Deseja remover o cartão master com final **** **** **** 5318? Sim/Não")
+        leia(
+        Se s entao
+        escreva (" Cartão removido com sucesso.")
+        escreva ("volte para o Menu e clique em opção 4 para adicionar outro cartão.")
+        Se n  ("Operação cancelada.")
+        fimse
    caso "0"
       //volta
    outrocaso
