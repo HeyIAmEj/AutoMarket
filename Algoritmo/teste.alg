@@ -1,9 +1,8 @@
 Algoritmo "GitTest"
 
 Var
-
+ nome: caractere
 Inicio
-procedimento teste
-//teste
-fimprocedimento
+escreva (" digite ")
+leia (nome)
 Fimalgoritmo
