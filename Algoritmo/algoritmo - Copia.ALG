@@ -3,7 +3,7 @@ Algoritmo "Algoritmo"
 Var
    // VARIAVEIS GLOBAIS
 
-
+   saldo : real
    senhaEstoque : caractere
    carrinho: vetor [1..20, 1..3] de caractere
    //AUMENTAR VALOR DE CARRINHO E PRODUTOS POSTERIORMENTE
@@ -13,6 +13,7 @@ Var
    produtos: vetor [1..20, 1..3] de caractere
    nome, sobrenome, cpf, email, dataNascimento, senhaConta : caractere
 Inicio
+   saldo <- 250.00
    quantidadeProdutos <- 20
    senhaEstoque <- "senha123"
 
@@ -115,6 +116,59 @@ inicio
    fimenquanto
 fimprocedimento
 
+procedimento exibirOpcoesPagamento(total : real)
+var
+   opcao : caractere
+   contador : inteiro
+inicio
+
+   escreval("Opções de Pagamento")
+   escreval()
+   escreval("1- Saldo (R$", saldo, ")")
+   escreval("2- Cartão Master com final 5318.")
+   escreval("3- Cartão Visa com final 7344.")
+   escreval("4- Voltar")
+   escreval()
+   escreva("Opção: ")
+   leia(opcao)
+
+   escolha opcao
+   caso "1"
+      se (saldo >= total) entao
+         saldo <- saldo - total
+         para contador de 1 ate quantidadeProdutos faca
+            carrinho[contador,1] <- ""
+            carrinho[contador,2] <- ""
+            carrinho[contador,3] <- ""
+         fimpara
+         escreval("Compra Efetuada com Sucesso!")
+         escreval("Obrigado!")
+         escreval()
+      senao
+         escreval("Você não tem saldo suficiente! Faça uma recarga!")
+      fimse
+   caso "2"
+      escreval("Compra Negada!")
+   caso "3"
+      escreval("Compra Aprovada!")
+      para contador de 1 ate quantidadeProdutos faca
+         carrinho[contador,1] <- ""
+         carrinho[contador,2] <- ""
+         carrinho[contador,3] <- ""
+      fimpara
+      escreval("Compra Efetuada com Sucesso!")
+      escreval("Obrigado!")
+      escreval()
+   caso "4"
+      escreval("Operação Cancelada!")
+   outrocaso
+      escreval("Opção Inválida!")
+      escreval()
+   fimescolha
+
+
+fimprocedimento
+
 procedimento exibirMenuCarrinho
 var
    contador : inteiro
@@ -160,7 +214,7 @@ inicio
             escreval()
          caso "2"
             //finalizarCompra
-
+            exibirOpcoesPagamento(total)
          caso "0"
             //voltar
          outrocaso
@@ -243,9 +297,8 @@ fimprocedimento
 procedimento menuPagamentos
 var
    opcao : caractere
-   saldo : real
    numcartao, cvv , vencimento : inteiro
-   n , s :  logico
+   opcao2 : caractere
 inicio
    escreval("1- Ver Saldo")
    escreval("2- Adicionar Saldo")
@@ -257,33 +310,46 @@ inicio
    leia(opcao)
    escolha opcao
    caso "1"
-         //ver saldo
-         escreval("Saldo: ", saldo)
+      //ver saldo
+      escreval("Saldo: R$", saldo:1:2)
+      escreval()
    caso "2"
-        //adicionar saldo, simulação add saldo na loja
-        escreva("Para adicionar saldo vá até a loja e
-        escreva ("solicite a um funcionário.")
+      //adicionar saldo, simulação add saldo na loja
+      escreval("Para adicionar saldo vá até a loja e solicite a um funcionário.")
+      escreval()
    caso "3"
-        //ver cartoes
-        escreva("Você cadastrou com cartão Master com final **** **** **** 5318.")
+      //ver cartoes
+      escreval("Cartões Cadastrados: ")
+      escreval()
+      escreval("Cartão Master com final **** **** **** 5318.")
+      escreval("Cartão Visa com final **** **** **** 7344.")
+      escreval()
    caso "4"
-        //adicionar cartao
-        escreval(" Para adicionar cartões Visa,Master,Hiper digite o número do cartão:")
-        leia (numcartao)
-        escreval(" Digite o vencimento :(MM/AAAA)")
-        leia (vencimento)
-        escreval(" Digite o CVV que fica atrás do seu cartão:")
-        leia(cvv)
-        escreval("Cartão adicionado com sucesso! Agora você já pode realizar suas compras!")
+      //adicionar cartao
+      escreva("Para adicionar cartões Visa,Master,Hiper digite o número do cartão: ")
+      leia(numcartao)
+      escreva("Digite o vencimento(MM/AAAA): ")
+      leia(vencimento)
+      escreva("Digite o CVV que fica atrás do seu cartão:")
+      leia(cvv)
+      escreval("Cartão adicionado com sucesso! Agora você já pode realizar suas compras!")
+      escreval()
    caso "5"
-        //remover cartao
-        escreval(" Deseja remover o cartão master com final **** **** **** 5318? Sim/Não")
-        leia(
-        Se s entao
-        escreva (" Cartão removido com sucesso.")
-        escreva ("volte para o Menu e clique em opção 4 para adicionar outro cartão.")
-        Se n  ("Operação cancelada.")
-        fimse
+      //remover cartao
+      escreval("Deseja remover o cartão Master com final **** **** **** 5318?")
+      escreval("1- Sim")
+      escreval("2- Não")
+      escreva("Opção: ")
+      leia(opcao2)
+      se (opcao2 = "1") entao
+         escreval("Cartão Removido com Sucesso.")
+      senao
+         se (opcao2 = "2") entao
+            escreval("Operação Cancelada.")
+         senao
+            escreval("Opção Inválida!")
+         fimse
+      fimse
    caso "0"
       //volta
    outrocaso
